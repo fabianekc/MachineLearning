@@ -1,7 +1,7 @@
 ---
 title: "Weight Lifting Exercise Analysis"
 author: "Christoph Fabianek"
-date: '`r format(Sys.time(), "%A, %B %d, %Y")`'
+date: 'Sunday, August 23rd, 2015'
 output: 
   html_document:
     keep_md: true

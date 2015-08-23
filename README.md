@@ -1,6 +1,6 @@
 # Weight Lifting Exercise Analysis
 Christoph Fabianek  
-`r format(Sys.time(), "%A, %B %d, %Y")`  
+Sunday, August 23rd, 2015  
 
 ## Overview
 This project investigates data collected during weight lifting exercises and applys a machine learning algorithm from the CARET Package of the R programming language to predict the manner in which exercises were performed. This report was written for the course *Practical Machine Learning* of the *Coursera Data Science Specialization*.
@@ -42,8 +42,8 @@ stopCluster(cluster)
 
 To get an unbiased estimate of the models performance (*Random Forest* with 10-fold *Cross Validation*) it is applied to the so far untouched testing dataset:
 
-* The `confusionMatrix` states an **Accuracy of 99.12%**.  
-* The expected **Out-of-sample Error is 0.87%**.
+* The `confusionMatrix` states an **Accuracy of 99.120571%**.  
+* The expected **Out-of-sample Error is 0.8921744%**.
 
 Finally, the following figure shows the importance of the variables:
 ![](pml-project_files/figure-html/variable_importance-1.png) 
