@@ -23,6 +23,9 @@ First the underlying [training](https://d396qusza40orc.cloudfront.net/predmachle
 * convert `classe` into a factor variable
 
 ```{r load, cache = TRUE, echo=FALSE, message=FALSE, warning=FALSE}
+# knitr options
+options(scipen = 10, digits = 2)
+
 # load libraries
 library(caret)
 library(randomForest)
@@ -91,23 +94,19 @@ stopCluster(cluster)
 ```
 
 ## Result
-The following figure shows the importance of the variables:
-```{r variable_importance, cache = TRUE, echo=FALSE, message=FALSE, warning=FALSE}
-plot(varImp(model), main = "Importance of Top 20 Variables", xlab="Importance in %", top = 20)
-```
-
 ```{r confusion_matrix, cache = TRUE, echo=FALSE, message=FALSE, warning=FALSE}
 cm <- confusionMatrix(predict(model, data_testing), data_testing$classe)
 ```
 
 To get an unbiased estimate of the models performance (*Random Forest* with 10-fold *Cross Validation*) it is applied to the so far untouched testing dataset:
 
-```{r knitr_options, cache = TRUE, echo=FALSE, message=FALSE, warning=FALSE}
-options(scipen = 10, digits = 2)
-```
-
 * The `confusionMatrix` states an **Accuracy of `r cm$overall["Accuracy"]*100`%**.  
 * The expected **Out-of-sample Error is `r (sum(predict(model, data_testing) != data_testing$classe)/length(data_testing$classe))*100`%**.
+
+Finally, the following figure shows the importance of the variables:
+```{r variable_importance, cache = TRUE, echo=FALSE, message=FALSE, warning=FALSE}
+plot(varImp(model), main = "Importance of Top 20 Variables", xlab="Importance in %", top = 20)
+```
 
 ## Conclusion
 The *Random Forest* algorithm with *Cross Validation* provides great results (high accuracy and low error rate) out of the box without much tweaking. It was interesting to experiment with various parameters for the used algorithms to improve performance on the local machine. Nevertheless, the overall best result was achieved with default settings.
