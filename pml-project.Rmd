@@ -2,7 +2,9 @@
 title: "Weight Lifting Exercise Analysis"
 author: "Christoph Fabianek"
 date: '`r format(Sys.time(), "%A, %B %d, %Y")`'
-output: html_document
+output: 
+  html_document:
+    keep_md: true
 ---
 
 ## Overview
@@ -73,34 +75,43 @@ set.seed(210777)
 trainset <- createDataPartition(training$classe, p = 0.6, list = FALSE)
 data_training <- training[trainset, ]
 data_testing <- training[-trainset, ]
-save(data_training, file="pml_training.RData")
-save(data_testing, file="pml_testing.RData")
 ```
 
 ## Model Fitting
-*Random Forest* is used as algorithm to get a small out of sample error. (For performance reason a parallel cluster is setup.)
+Based on various tests *Random Forest* with 10 fold *Cross Validation* is chosen as algorithm to get a small out of sample error. (For performance reason a parallel cluster is setup.)  
 ```{r model_fitting, cache = TRUE, message=FALSE, warning=FALSE}
 cluster <- makeCluster(detectCores()-1)
 registerDoParallel(cluster)
-ctrl <- trainControl(classProbs = TRUE,
-                     savePredictions = TRUE,
+ctrl <- trainControl(method = "cv",
+                     number = 10,
                      allowParallel = TRUE)
-model <- train(classe ~ ., data = data_training, method = "rf")
+model <- train(classe ~ ., data = data_training, method = "rf", 
+               trControl = ctrl, prox = FALSE)
 stopCluster(cluster)
-save(model, file="pml_model.RData") 
 ```
 
-## Model Validation
-
-### Training Set Accuracy
-```{r training_set_accuracy, cache = TRUE, message=FALSE, warning=FALSE}
-print(confusionMatrix(predict(model, data_training), data_training$classe))
+## Result
+The following figure shows the importance of the variables:
+```{r variable_importance, cache = TRUE, echo=FALSE, message=FALSE, warning=FALSE}
+plot(varImp(model), main = "Importance of Top 20 Variables", xlab="Importance in %", top = 20)
 ```
 
-### Testing Set Accuracy
-```{r testing_set_accuracy, cache = TRUE, message=FALSE, warning=FALSE}
-print(confusionMatrix(predict(model, data_testing), data_testing$classe))
+```{r confusion_matrix, cache = TRUE, echo=FALSE, message=FALSE, warning=FALSE}
+cm <- confusionMatrix(predict(model, data_testing), data_testing$classe)
 ```
+
+To get an unbiased estimate of the models performance (*Random Forest* with 10-fold *Cross Validation*) it is applied to the so far untouched testing dataset:
+
+```{r knitr_options, cache = TRUE, echo=FALSE, message=FALSE, warning=FALSE}
+options(scipen = 10, digits = 2)
+```
+
+* The `confusionMatrix` states an **Accuracy of `r cm$overall["Accuracy"]*100`%**.  
+* The expected **Out-of-sample Error is `r (sum(predict(model, data_testing) != data_testing$classe)/length(data_testing$classe))*100`%**.
+
+## Conclusion
+The *Random Forest* algorithm with *Cross Validation* provides great results (high accuracy and low error rate) out of the box without much tweaking. It was interesting to experiment with various parameters for the used algorithms to improve performance on the local machine. Nevertheless, the overall best result was achieved with default settings.
+
 
 ## Appendix
 
@@ -165,8 +176,21 @@ set.seed(210777)
 trainset <- createDataPartition(training$classe, p = 0.6, list = FALSE)
 data_training <- training[trainset, ]
 data_testing <- training[-trainset, ]
-save(data_training, file="pml_training.RData")
-save(data_testing, file="pml_testing.RData")
+```
+
+### Evaluating the Model
+R code for evaluating the model
+```{r evaluate_model, cache = TRUE, echo=TRUE, message=FALSE, warning=FALSE}
+prediction <- predict(model, data_testing)
+
+# confusionMatrix to get accuracy
+print(confusionMatrix(prediction, data_testing$classe))
+
+# calculate out-of-sample error
+oos_error <- sum(prediction != data_testing$classe)/length(data_testing$classe)
+
+# list to show 20 most imporatant varables in descending order
+print(varImp(model))
 ```
 
 ### Prediction Assignment Submission
