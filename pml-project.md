@@ -45,12 +45,14 @@ To get an unbiased estimate of the model performance (*Random Forest* with 10-fo
 * The `confusionMatrix` states an **Accuracy of 99.12%**.  
 * The expected **Out-of-sample Error is 0.88%**.
 
-Finally, the following figure shows the importance of the variables:
+Finally, the following figure shows the importance of the variables:  
+
 ![](pml-project_files/figure-html/variable_importance-1.png) 
 
 ## Conclusion
 The *Random Forest* algorithm with *Cross Validation* provides great results (high accuracy and low error rate) out of the box without much tweaking. It was interesting to experiment with various parameters for the used algorithms to improve performance on the local machine. Nevertheless, the overall best result was achieved with default settings.
 
+\pagebreak  
 
 ## Appendix
 

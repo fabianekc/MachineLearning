@@ -3,3 +3,6 @@ lattice
 ggplot2
 caret
 randomForest
+foreach
+iterators
+doParallel
