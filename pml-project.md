@@ -24,7 +24,7 @@ Afterwards the dataset is split into a 60% training and a 40% testing set.
 
 
 ## Model Fitting
-Based on various tests *Random Forest* with 10 fold *Cross Validation* is chosen as algorithm to get a small out of sample error. (For performance reason a parallel cluster is setup.)  
+Based on various tests *Random Forest* with 10 fold *Cross Validation* is chosen as algorithm to get a small out-of-sample error. (For performance reason a parallel cluster is setup.)  
 
 ```r
 cluster <- makeCluster(detectCores()-1)
@@ -40,10 +40,10 @@ stopCluster(cluster)
 ## Result
 
 
-To get an unbiased estimate of the models performance (*Random Forest* with 10-fold *Cross Validation*) it is applied to the so far untouched testing dataset:
+To get an unbiased estimate of the model performance (*Random Forest* with 10-fold *Cross Validation*) it is applied to the so far untouched testing dataset:
 
-* The `confusionMatrix` states an **Accuracy of 99.120571%**.  
-* The expected **Out-of-sample Error is 0.8921744%**.
+* The `confusionMatrix` states an **Accuracy of 99.12%**.  
+* The expected **Out-of-sample Error is 0.88%**.
 
 Finally, the following figure shows the importance of the variables:
 ![](pml-project_files/figure-html/variable_importance-1.png) 

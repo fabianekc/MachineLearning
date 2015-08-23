@@ -81,7 +81,7 @@ data_testing <- training[-trainset, ]
 ```
 
 ## Model Fitting
-Based on various tests *Random Forest* with 10 fold *Cross Validation* is chosen as algorithm to get a small out of sample error. (For performance reason a parallel cluster is setup.)  
+Based on various tests *Random Forest* with 10 fold *Cross Validation* is chosen as algorithm to get a small out-of-sample error. (For performance reason a parallel cluster is setup.)  
 ```{r model_fitting, cache = TRUE, message=FALSE, warning=FALSE}
 cluster <- makeCluster(detectCores()-1)
 registerDoParallel(cluster)
@@ -98,7 +98,7 @@ stopCluster(cluster)
 cm <- confusionMatrix(predict(model, data_testing), data_testing$classe)
 ```
 
-To get an unbiased estimate of the models performance (*Random Forest* with 10-fold *Cross Validation*) it is applied to the so far untouched testing dataset:
+To get an unbiased estimate of the model performance (*Random Forest* with 10-fold *Cross Validation*) it is applied to the so far untouched testing dataset:
 
 * The `confusionMatrix` states an **Accuracy of `r cm$overall["Accuracy"]*100`%**.  
 * The expected **Out-of-sample Error is `r (sum(predict(model, data_testing) != data_testing$classe)/length(data_testing$classe))*100`%**.
